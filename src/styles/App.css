@@ -1,0 +1,60 @@
+:root {
+  font-family: 'Lato', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+header {
+  background-color: #f1f1f1;
+  padding: 15px;
+  text-align: center;
+  font-size: 35px;
+  font-weight: 400;
+}
+
+h1 {
+  background-color: #f1f1f1;
+  padding: 15px;
+  text-align: center;
+  font-size: 30px;
+}
+
+.greyedHeading {
+  color: #CCCCCC;
+}
+
+.subnote {
+  font-size: 20px;
+  color: #888888;
+}
+
+.ingress {
+  font-size: 20px;
+}
+
+.centeredButton {
+  text-align: center;
+  padding: 15px;
+}
+
+
+
+
+.column {
+  float: left;
+  width: 31%;
+  padding: 1%;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+.footer {
+  background-color: #f1f1f1;
+  padding: 10px;
+  text-align: center;
+}
