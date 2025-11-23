@@ -33,7 +33,8 @@ export function CustomProductBuilder() {
   return (
     <>
       <div>
-        <h2>Select your cone</h2>
+        <h3>Design an ice-cream of your choice</h3>
+        <h4>Select your cone</h4>
         <Select options={cones} />
       </div>
       <div className="centeredButton">

@@ -1,13 +1,16 @@
-import { Component, type ChangeEventHandler } from "react";
+import { Component } from "react";
 import type { OrderData } from "../types/OrderData";
 import { InputAdornment, Paper, TextField } from "@mui/material";
 import '../styles/Order.css';
+import { Product } from "./product";
+import type { ProductData } from "../types/ProductData";
 
-type OrderProps = {
-  data?: OrderData
+export type OrderProps = {
+  data?: OrderData,
+  deleteProductHandler: (index: number) => undefined
 }
 
-type OrderState = {
+export type OrderState = {
   name: string
 }
 
@@ -16,7 +19,7 @@ export class Order extends Component<OrderProps, OrderState> {
   constructor(props: OrderProps) {
     super(props);
     this.state = {
-      name: ""
+      name: "Enter your name"
     }
   }
 
@@ -31,6 +34,9 @@ export class Order extends Component<OrderProps, OrderState> {
     this.nameUnchanged = false;
     this.validate();
   }
+
+
+
 
   validate = () => {
     this.valid = !this.nameUnchanged && !this.nameError && this.props.data!.products.length > 0;
@@ -50,7 +56,6 @@ export class Order extends Component<OrderProps, OrderState> {
             label="Required"
             value={this.state.name}
             onChange={this.nameUpdated}
-            defaultValue="Enter your name"
             helperText={this.nameError ? "Too short!" : ""}
             error={this.nameError}
             slotProps={{
@@ -62,12 +67,11 @@ export class Order extends Component<OrderProps, OrderState> {
           <div>
             Products:
             <ol>
-              {this.props.data.products.map((prod: ProductData) => {
-                if (prod.name != undefined) {
-                  return <li>{prod.name}</li>
-                }
-                return null;
-              })}
+              {this.props.data.products.map((prod: ProductData, index: number) =>
+                <li key={index}>
+                  <Product productIndex={index} data={prod} deleteProductHandler={this.props.deleteProductHandler} />
+                </li>
+              )}
             </ol>
           </div>
         </div>

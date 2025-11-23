@@ -40,6 +40,16 @@ export class MainPage extends Component<null, MainPageState> {
   }
 
 
+  deleteProductClicked = (index: number): void => {
+    this.setState((prevState: MainPageState) => ({
+      currentOrder: {
+        ...prevState.currentOrder,
+        products: prevState.currentOrder!.products.filter((_, i) => i !== index)
+      }
+    }))
+  }
+
+
 
   customProductAdded = (data: ProductData): void => {
 
@@ -75,7 +85,7 @@ export class MainPage extends Component<null, MainPageState> {
             />
             <div className="column">
               <h1 className={this.state.currentOrder == undefined ? "greyedHeading" : ""}>Current Order</h1>
-              <Order data={this.state.currentOrder} />
+              <Order data={this.state.currentOrder} deleteProductHandler={this.deleteProductClicked} />
               <div className="centeredButton">
                 <Button variant="contained"
                   disabled={!this.state.orderValidated}

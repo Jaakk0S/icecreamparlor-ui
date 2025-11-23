@@ -48,6 +48,7 @@ export class ClassicSelector extends Component<ClassicProps, ClassicState> {
   render() {
     return (
       <>
+        <h3>Choose from our classic ice-creams</h3>
         <Select name={"classicSelect"}
           options={this.products}
           defaultValue={this.products[0]}

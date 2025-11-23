@@ -3,6 +3,12 @@
     background-image: url('../assets/lined-paper-texture.jpg');
 }
 
+.removeHover {
+    text-decoration: line-through;
+    user-select: none;
+    color: #CC0000;
+}
+
 .productList {
 
 }
