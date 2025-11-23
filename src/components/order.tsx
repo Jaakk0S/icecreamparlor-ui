@@ -27,6 +27,11 @@ export class Order extends Component<OrderProps, OrderState> {
   nameError: boolean = true;
   valid = false;
 
+  nameSelected = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (this.nameUnchanged)
+      e.currentTarget.select();
+  }
+
   nameUpdated = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n: string = e.currentTarget.value;
     this.setState({ name: n })
@@ -34,7 +39,6 @@ export class Order extends Component<OrderProps, OrderState> {
     this.nameUnchanged = false;
     this.validate();
   }
-
 
 
 
@@ -56,6 +60,7 @@ export class Order extends Component<OrderProps, OrderState> {
             label="Required"
             value={this.state.name}
             onChange={this.nameUpdated}
+            onFocus={this.nameSelected}
             helperText={this.nameError ? "Too short!" : ""}
             error={this.nameError}
             slotProps={{
