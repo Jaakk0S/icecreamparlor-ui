@@ -9,6 +9,12 @@
     color: #CC0000;
 }
 
+.deleteIndicator {
+    font-size: 12px;
+    vertical-align: middle;
+    color: #CC0000;
+}
+
 .productList {
 
 }

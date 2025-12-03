@@ -7,7 +7,8 @@ import type { ProductData } from "../types/ProductData";
 
 export type OrderProps = {
   data?: OrderData,
-  deleteProductHandler: (index: number) => undefined
+  deleteProductHandler: (index: number) => undefined,
+  validateNameHandler: (valid: boolean) => void
 }
 
 export type OrderState = {
@@ -24,8 +25,8 @@ export class Order extends Component<OrderProps, OrderState> {
   }
 
   nameUnchanged: boolean = true;
+  nameMsg: string = "Name required";
   nameError: boolean = true;
-  valid = false;
 
   nameSelected = (e: React.FocusEvent<HTMLInputElement>) => {
     if (this.nameUnchanged)
@@ -36,14 +37,15 @@ export class Order extends Component<OrderProps, OrderState> {
     const n: string = e.currentTarget.value;
     this.setState({ name: n })
     this.nameError = n.length < 3;
+    if (n.length < 3)
+      this.nameMsg = "Name too short!"
     this.nameUnchanged = false;
     this.validate();
   }
 
-
-
   validate = () => {
-    this.valid = !this.nameUnchanged && !this.nameError && this.props.data!.products.length > 0;
+    let valid: boolean = !this.nameUnchanged && !this.nameError && this.props.data!.products.length > 0;
+    this.props.validateNameHandler(valid);
   }
 
   render() {
@@ -61,11 +63,11 @@ export class Order extends Component<OrderProps, OrderState> {
             value={this.state.name}
             onChange={this.nameUpdated}
             onFocus={this.nameSelected}
-            helperText={this.nameError ? "Too short!" : ""}
+            helperText={this.nameError ? this.nameMsg : ""}
             error={this.nameError}
             slotProps={{
               input: {
-                startAdornment: <InputAdornment position="start">Customer name: </InputAdornment>,
+                endAdornment: <InputAdornment position="start">Customer name: </InputAdornment>,
               },
             }}
           />

@@ -39,10 +39,19 @@ h3,h4 {
 
 .centeredButton {
   text-align: center;
-  padding: 15px;
+  padding: 30px;
 }
 
 
+.invisible {
+  display: none;
+}
+
+.obColumn {
+  float: left;
+  width: 47%;
+  padding: 1%;
+}
 
 
 .column {

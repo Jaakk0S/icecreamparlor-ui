@@ -1,6 +1,7 @@
 import '../styles/Order.css';
 import { Component } from "react";
 import type { ProductData } from "../types/ProductData";
+import parse from 'html-react-parser';
 
 type ProductProps = {
   productIndex: number,
@@ -37,14 +38,42 @@ export class Product extends Component<ProductProps, ProductState> {
     this.props.deleteProductHandler(this.props.productIndex);
   }
 
+  toString(): string {
+    if (this.props.data.name != undefined) // Is classic
+      return "Classic: " + this.props.data.name;
+
+    // Is custom
+
+    let str = "Custom:<ul>" +
+      "<li>Flavor: " + this.props.data.flavor!.name + "</li>" +
+      "<li>Cone: " + this.props.data.cone!.name + "</li>" +
+      "<li>Toppings: ";
+    if (this.props.data.toppings!.length == 1 && this.props.data.toppings![0].id == 0)
+      str += "-";
+    else {
+      str += "<ul>";
+      this.props.data.toppings!.map(t => {
+        str += t.name
+      });
+      str += "</ul>";
+    }
+    str += "</li></ul>";
+    return str;
+  }
+
   render() {
-    if (this.props.data.name != undefined)
-      return <span
+    return <>
+      <div
         className={this.state.hover ? 'removeHover' : ''}
         onMouseEnter={this.onMouseOver.bind(this)}
         onMouseLeave={this.onMouseOut.bind(this)}
         onClick={() => this.props.deleteProductHandler(this.props.productIndex)}
-      >{this.props.data.name}
+      >
+        {parse(this.toString())}
+      </div>
+      <span className={this.state.hover ? 'deleteIndicator' : 'invisible'}>
+        &nbsp;&nbsp;&lt;click to delete&gt;
       </span>
+    </>
   }
 }

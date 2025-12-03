@@ -1,5 +1,5 @@
 export type TypeSelection = {
-    value: number;
     label: string;
+    value: number;
     isDisabled?: boolean;
 }

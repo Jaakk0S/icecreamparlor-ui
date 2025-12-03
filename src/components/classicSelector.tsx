@@ -1,11 +1,12 @@
 import { Button } from '@mui/material';
 import { Component } from 'react';
-import Select, { type SingleValue } from 'react-select';
+import Select, { type MultiValue, type SingleValue } from 'react-select';
+import makeAnimated from 'react-select/animated';
 import type { TypeSelection } from '../types/TypeSelection';
 
 type ClassicState = {
   selection: SingleValue<TypeSelection>;
-  disabled: boolean;
+  isValid: boolean;
 }
 
 type ClassicProps = {
@@ -26,26 +27,27 @@ export class ClassicSelector extends Component<ClassicProps, ClassicState> {
     super(props);
     this.state = {
       selection: this.products[0],
-      disabled: true
+      isValid: false
     }
   }
 
-  selectionChanged = (selectedOption: SingleValue<TypeSelection>) => {
+  selectionChanged = (selectedOption: SingleValue<TypeSelection> | MultiValue<TypeSelection>) => {
     this.setState({
-      selection: selectedOption,
-      disabled: selectedOption == this.products[0]
+      selection: selectedOption as SingleValue<TypeSelection>,
+      isValid: selectedOption != this.products[0]
     });
   }
 
   addToOrderClicked = () => {
-    this.props.productAddedHandler("Classic: " + this.state.selection!.label);
+    this.props.productAddedHandler(this.state.selection!.label);
     this.setState({
       selection: this.products[0],
-      disabled: true
+      isValid: false
     });
   }
 
   render() {
+    const animatedComponents = makeAnimated();
     return (
       <>
         <h3>Choose from our classic ice-creams</h3>
@@ -53,11 +55,12 @@ export class ClassicSelector extends Component<ClassicProps, ClassicState> {
           options={this.products}
           defaultValue={this.products[0]}
           value={this.state.selection}
-          onChange={(option: SingleValue<TypeSelection>) => this.selectionChanged(option)}
+          components={animatedComponents}
+          onChange={this.selectionChanged}
         />
         <div className="centeredButton">
           <Button variant="outlined"
-            disabled={this.state.disabled}
+            disabled={!this.state.isValid}
             onClick={this.addToOrderClicked}>
             Add to Order
           </Button>

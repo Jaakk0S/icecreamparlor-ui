@@ -32,7 +32,7 @@ export class OrderBuilder extends Component<OBProps> {
                 <ClassicSelector productAddedHandler={this.props.classicProductAddedHandler} />
               </TabPanel>
               <TabPanel>
-                <CustomProductBuilder />
+                <CustomProductBuilder productAddedHandler={this.props.customProductAddedHandler} />
               </TabPanel>
             </Tabs>
           )

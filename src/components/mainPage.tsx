@@ -4,12 +4,14 @@ import { OrdersStatus } from "./ordersStatus";
 import '../styles/App.css'
 import { OrderBuilder } from "./orderBuilder";
 import type { ProductData } from "../types/ProductData";
-import { Order } from "./order";
+import { Order } from "./orderUnderConstruction";
 import type { OrderData } from "../types/OrderData";
 import { Button } from "@mui/material";
 
 type MainPageState = {
   currentOrder?: OrderData,
+  nrProducts: number,
+  nameValidated: boolean,
   orderValidated: boolean
 }
 
@@ -19,6 +21,8 @@ export class MainPage extends Component<null, MainPageState> {
     super(props);
     this.state = {
       currentOrder: undefined,
+      nrProducts: 0,
+      nameValidated: false,
       orderValidated: false
     }
   }
@@ -31,32 +35,44 @@ export class MainPage extends Component<null, MainPageState> {
 
     // Fetch classic product data
 
+    this.addProduct({ name: name });
+  }
+
+  customProductAdded = (data: ProductData): void => {
+    this.addProduct(data);
+  }
+
+  addProduct = (data: ProductData): void => {
     this.setState((prevState: MainPageState) => ({
       currentOrder: {
         ...prevState.currentOrder,
-        products: prevState.currentOrder!.products.concat({ name: name })
-      }
-    }))
+        products: prevState.currentOrder!.products.concat(data)
+      },
+      nrProducts: this.state.nrProducts + 1
+    }), () => this.validateOrder())
   }
 
 
-  deleteProductClicked = (index: number): void => {
+  deleteProductClicked = (index: number): undefined => {
     this.setState((prevState: MainPageState) => ({
       currentOrder: {
         ...prevState.currentOrder,
         products: prevState.currentOrder!.products.filter((_, i) => i !== index)
-      }
-    }))
+      },
+      nrProducts: this.state.nrProducts - 1
+    }), () => this.validateOrder())
   }
 
-
-
-  customProductAdded = (data: ProductData): void => {
-
+  validateName = (valid: boolean): void => {
+    this.setState({
+      nameValidated: valid
+    }, () => this.validateOrder())
   }
 
-  orderValidated = (status: boolean): void => {
-    this.setState({ orderValidated: status });
+  validateOrder = (): void => {
+    this.setState({
+      orderValidated: this.state.nrProducts > 0 && this.state.nameValidated
+    })
   }
 
   placeOrderClicked = (): void => {
@@ -85,7 +101,7 @@ export class MainPage extends Component<null, MainPageState> {
             />
             <div className="column">
               <h1 className={this.state.currentOrder == undefined ? "greyedHeading" : ""}>Current Order</h1>
-              <Order data={this.state.currentOrder} deleteProductHandler={this.deleteProductClicked} />
+              <Order data={this.state.currentOrder} deleteProductHandler={this.deleteProductClicked} validateNameHandler={this.validateName} />
               <div className="centeredButton">
                 <Button variant="contained"
                   disabled={!this.state.orderValidated}
