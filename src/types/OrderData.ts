@@ -1,13 +1,18 @@
 import type { ProductData } from "./ProductData";
 
-export enum OrderStatus   {
-  UnderConstruction, Placed, InPreparation, InDelivery, Delivered
+const OrderStatus = {
+  UnderConstruction: 'UnderConstruction',
+  Placed: 'Placed',
+  InPreparation: 'InPreparation',
+  InDelivery: 'InDelivery',
+  Delivered: 'Delivered'
 }
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 export type OrderData = {
   id?: number;
-  status:
-  customerName?: string;
+  status?: OrderStatus,
+  customerName?: string,
   products: ProductData[]
 }
 

@@ -85,15 +85,15 @@ export class CustomProductBuilder extends Component<CustomProps, CustomState> {
     });
   }
 
-  flavorChanged = (newValue: SingleValue<TypeSelection> | MultiValue<TypeSelection>, actionMeta: ActionMeta<TypeSelection>): void => {
+  flavorChanged = (newValue: SingleValue<TypeSelection> | MultiValue<TypeSelection>, _actionMeta: ActionMeta<TypeSelection>): void => {
     this.setState({ flavorSelection: newValue as SingleValue<TypeSelection> }, () => this.validate());
   }
 
-  coneChanged = (newValue: SingleValue<TypeSelection> | MultiValue<TypeSelection>, actionMeta: ActionMeta<TypeSelection>): void => {
+  coneChanged = (newValue: SingleValue<TypeSelection> | MultiValue<TypeSelection>, _actionMeta: ActionMeta<TypeSelection>): void => {
     this.setState({ coneSelection: newValue as SingleValue<TypeSelection> }, () => this.validate());
   }
 
-  toppingChanged = (newValue: SingleValue<TypeSelection> | MultiValue<TypeSelection>, actionMeta: ActionMeta<TypeSelection>): void => {
+  toppingChanged = (newValue: SingleValue<TypeSelection> | MultiValue<TypeSelection>, _actionMeta: ActionMeta<TypeSelection>): void => {
     this.setState({ toppingsSelection: newValue as MultiValue<TypeSelection> });
   }
 

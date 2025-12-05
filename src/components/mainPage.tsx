@@ -8,6 +8,8 @@ import { Order } from "./orderUnderConstruction";
 import type { OrderData } from "../types/OrderData";
 import { Button } from "@mui/material";
 
+type MainPageProps = {}
+
 type MainPageState = {
   currentOrder?: OrderData,
   nrProducts: number,
@@ -15,9 +17,9 @@ type MainPageState = {
   orderValidated: boolean
 }
 
-export class MainPage extends Component<null, MainPageState> {
+export class MainPage extends Component<MainPageProps, MainPageState> {
 
-  constructor(props: null) {
+  constructor(props: any) {
     super(props);
     this.state = {
       currentOrder: undefined,
