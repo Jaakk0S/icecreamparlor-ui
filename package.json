@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b --noEmit && vite build",
     "clean": "rm -rf dist && find src -name '*.js'|xargs rm",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -18,7 +18,8 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-select": "5.10.2",
-    "react-tabs": "6.1.0"
+    "react-tabs": "6.1.0",
+    "serve": "^14.2.5"
   },
   "devDependencies": {
     "@eslint/js": "9.39.1",
