@@ -3,19 +3,19 @@ import { Component } from "react";
 import type { ProductData } from "../types/ProductData";
 import parse from 'html-react-parser';
 
-type ProductProps = {
+type ProductUCProps = {
   productIndex: number,
   data: ProductData,
-  deleteProductHandler: (index: number) => undefined,
+  deleteProductHandler?: (index: number) => undefined,
 }
 
-type ProductState = {
+type ProductUCState = {
   hover: boolean
 }
 
-export class Product extends Component<ProductProps, ProductState> {
+export class ProductUnderConstructionCard extends Component<ProductUCProps, ProductUCState> {
 
-  constructor(props: ProductProps) {
+  constructor(props: ProductUCProps) {
     super(props);
     this.state = {
       hover: false
@@ -35,7 +35,8 @@ export class Product extends Component<ProductProps, ProductState> {
   }
 
   onClick() {
-    this.props.deleteProductHandler(this.props.productIndex);
+    if (this.props.deleteProductHandler)
+      this.props.deleteProductHandler(this.props.productIndex);
   }
 
   toString(): string {
@@ -67,7 +68,7 @@ export class Product extends Component<ProductProps, ProductState> {
         className={this.state.hover ? 'removeHover' : ''}
         onMouseEnter={this.onMouseOver.bind(this)}
         onMouseLeave={this.onMouseOut.bind(this)}
-        onClick={() => this.props.deleteProductHandler(this.props.productIndex)}
+        onClick={() => this.props.deleteProductHandler ? this.props.deleteProductHandler(this.props.productIndex) : null}
       >
         {parse(this.toString())}
       </div>

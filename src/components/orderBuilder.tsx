@@ -4,15 +4,43 @@ import 'react-tabs/style/react-tabs.css';
 import { ClassicSelector } from './classicSelector';
 import { CustomProductBuilder } from './customProductBuilder';
 import '../styles/App.css'
-import type { ProductData } from "../types/ProductData";
+import type { AbstractProductData, ProductData } from "../types/ProductData";
 import { Button } from "@mui/material";
+import type { TypeSelection } from '../types/TypeSelection';
 
 
 export type OBProps = {
   currentOrderExists: boolean,
   newOrderStartedHandler: () => void,
-  classicProductAddedHandler: (name: string) => void,
+  classicProductAddedHandler: (classicId: number) => void,
   customProductAddedHandler: (data: ProductData) => void
+}
+
+export const SELECTION_BASE: TypeSelection[] = [{ value: 0, label: 'Make your selection', isDisabled: true }];
+
+export async function fetchTypeSelection(endpoint: string): Promise<TypeSelection[]> {
+  let url: string = `http://${import.meta.env.VITE_MENU_API_HOST}:${import.meta.env.VITE_MENU_API_PORT}/menu/v1/` + endpoint;
+  console.log('GET ' + url);
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    mode: 'cors'
+  }).then(async (resp) => {
+    const data: AbstractProductData[] = await resp.json() as AbstractProductData[];
+    let newItems: TypeSelection[] = SELECTION_BASE.concat(data.map(p => {
+      return { value: p.id, label: p.name } as TypeSelection;
+    }));
+    newItems.sort((a: TypeSelection, b: TypeSelection) => {
+      return a.value < b.value ? -1 : 1;
+    });
+    return newItems;
+  }).catch(err => {
+    console.error("Error fetching data: " + err);
+    return [];
+  });
 }
 
 export class OrderBuilder extends Component<OBProps> {

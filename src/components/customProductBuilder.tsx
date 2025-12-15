@@ -4,8 +4,12 @@ import Select, { type ActionMeta, type MultiValue, type SingleValue } from 'reac
 import makeAnimated from 'react-select/animated';
 import type { TypeSelection } from '../types/TypeSelection';
 import type { ProductData } from '../types/ProductData';
+import { fetchTypeSelection, SELECTION_BASE } from './orderBuilder';
 
 type CustomState = {
+  flavors: TypeSelection[];
+  cones: TypeSelection[];
+  toppings: TypeSelection[];
   flavorSelection: SingleValue<TypeSelection>;
   coneSelection: SingleValue<TypeSelection>;
   toppingsSelection: MultiValue<TypeSelection>;
@@ -18,45 +22,37 @@ type CustomProps = {
 
 export class CustomProductBuilder extends Component<CustomProps, CustomState> {
 
-  cones = [
-    { value: 0, label: 'Select your cone', isDisabled: true },
-    { value: 1, label: 'Waffle' },
-    { value: 2, label: 'Chocolate-dipped' },
-    { value: 3, label: 'Sugar' },
-    { value: 4, label: 'Bowl' },
-    { value: 5, label: 'Pretzel' }
-  ];
-
-  flavors = [
-    { value: 0, label: 'Select your flavor', isDisabled: true },
-    { value: 1, label: 'Vanilla' },
-    { value: 2, label: 'Chocolate' },
-    { value: 3, label: 'Strawberry' },
-    { value: 4, label: 'Banana' },
-    { value: 5, label: 'Fudge' },
-    { value: 6, label: 'Coconut' }
-  ];
-
-  toppings = [
-    { value: 0, label: 'Select some toppings', isDisabled: true },
-    { value: 1, label: 'Chocolate chips' },
-    { value: 2, label: 'Chocolate sprinkles' },
-    { value: 3, label: 'Whipped cream' },
-    { value: 4, label: 'Mini candy cane' },
-    { value: 5, label: 'Powdered sugar' },
-    { value: 6, label: 'Melted fudge' },
-    { value: 7, label: 'Melted chocolate' }
-  ];
-
   constructor(props: CustomProps) {
     super(props);
     this.state = {
-      flavorSelection: this.flavors[0],
-      coneSelection: this.cones[0],
-      toppingsSelection: [this.toppings[0]],
+      flavors: SELECTION_BASE,
+      cones: SELECTION_BASE,
+      toppings: SELECTION_BASE,
+      flavorSelection: null,
+      coneSelection: null,
+      toppingsSelection: [],
       isValid: false
     }
   }
+
+  componentDidMount(): void {
+    fetchTypeSelection('flavor').then(result => {
+      this.setState({
+        flavors: result
+      })
+    })
+    fetchTypeSelection('cone').then(result => {
+      this.setState({
+        cones: result
+      })
+    })
+    fetchTypeSelection('topping').then(result => {
+      this.setState({
+        toppings: result
+      })
+    })
+  }
+
 
   animatedComponents = makeAnimated();
 
@@ -79,9 +75,9 @@ export class CustomProductBuilder extends Component<CustomProps, CustomState> {
     };
     this.props.productAddedHandler(data);
     this.setState({
-      flavorSelection: this.flavors[0],
-      coneSelection: this.cones[0],
-      toppingsSelection: [this.toppings[0]]
+      flavorSelection: this.state.flavors[0],
+      coneSelection: this.state.cones[0],
+      toppingsSelection: [this.state.toppings[0]]
     });
   }
 
@@ -98,7 +94,7 @@ export class CustomProductBuilder extends Component<CustomProps, CustomState> {
   }
 
   validate = (): void => {
-    let valid: boolean = this.state.flavorSelection != this.flavors[0] && this.state.coneSelection != this.cones[0];
+    let valid: boolean = this.state.flavorSelection != this.state.flavors[0] && this.state.coneSelection != this.state.cones[0];
     this.setState({ isValid: valid });
   }
 
@@ -113,7 +109,7 @@ export class CustomProductBuilder extends Component<CustomProps, CustomState> {
           </div>
           <div className="obColumn">
             <Select
-              options={this.flavors}
+              options={this.state.flavors}
               onChange={this.flavorChanged}
               components={this.animatedComponents} />
           </div>
@@ -124,7 +120,7 @@ export class CustomProductBuilder extends Component<CustomProps, CustomState> {
           </div>
           <div className="obColumn">
             <Select
-              options={this.cones}
+              options={this.state.cones}
               components={this.animatedComponents}
               onChange={this.coneChanged}
             />
@@ -136,7 +132,7 @@ export class CustomProductBuilder extends Component<CustomProps, CustomState> {
           </div>
           <div className="obColumn">
             <Select
-              options={this.toppings}
+              options={this.state.toppings}
               components={this.animatedComponents}
               onChange={this.toppingChanged}
               isMulti />

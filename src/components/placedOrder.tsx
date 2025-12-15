@@ -1,51 +1,56 @@
-import { Component } from "react";
+import { Component, type JSX } from "react";
 import type { OrderData } from "../types/OrderData";
-import { InputAdornment, Paper, TextField } from "@mui/material";
+import { Paper } from "@mui/material";
 import '../styles/Order.css';
-import { Product } from "./product";
 import type { ProductData } from "../types/ProductData";
+import { PlacedProductCard } from "./placedOrderProduct";
 
-export type OrderProps = {
-  data?: OrderData,
-  deleteProductHandler: (index: number) => undefined,
-  validateNameHandler: (valid: boolean) => void
+export type PlacedOrderProps = {
+  data: OrderData,
 }
 
-export type OrderState = {
-  name: string
+export type PlacedOrderState = {
+  hover: boolean
 }
 
-export class Order extends Component<OrderProps, OrderState> {
+export class PlacedOrder extends Component<PlacedOrderProps, PlacedOrderState> {
 
-  constructor(props: OrderProps) {
+  constructor(props: PlacedOrderProps) {
     super(props);
     this.state = {
-      name: "Enter your name"
+      hover: false
     }
   }
 
-  nameUnchanged: boolean = true;
-  nameMsg: string = "Name required";
-  nameError: boolean = true;
-
-  nameSelected = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (this.nameUnchanged)
-      e.currentTarget.select();
+  onMouseOver() {
+    this.setState({
+      hover: true
+    });
   }
 
-  nameUpdated = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const n: string = e.currentTarget.value;
-    this.setState({ name: n })
-    this.nameError = n.length < 3;
-    if (n.length < 3)
-      this.nameMsg = "Name too short!"
-    this.nameUnchanged = false;
-    this.validate();
+  onMouseOut() {
+    this.setState({
+      hover: false
+    });
   }
 
-  validate = () => {
-    let valid: boolean = !this.nameUnchanged && !this.nameError && this.props.data!.products.length > 0;
-    this.props.validateNameHandler(valid);
+  private productList(): JSX.Element {
+    if (this.state.hover) {
+      return (
+        <div>
+          Products:
+          <ol>
+            {this.props.data.products.map((prod: ProductData, index: number) =>
+              <li key={index}>
+                <PlacedProductCard productIndex={index} data={prod} />
+              </li>
+            )
+            }
+          </ol >
+        </div>
+      )
+    }
+    return (<div />);
   }
 
   render() {
@@ -55,34 +60,17 @@ export class Order extends Component<OrderProps, OrderState> {
 
     return (
       <Paper elevation={15}>
-        <div className="cardPaper">
-          <TextField required id="outlined-required"
-            fullWidth
-            variant="standard"
-            label="Required"
-            value={this.state.name}
-            onChange={this.nameUpdated}
-            onFocus={this.nameSelected}
-            helperText={this.nameError ? this.nameMsg : ""}
-            error={this.nameError}
-            slotProps={{
-              input: {
-                endAdornment: <InputAdornment position="start">Customer name: </InputAdornment>,
-              },
-            }}
-          />
-          <div>
-            Products:
-            <ol>
-              {this.props.data.products.map((prod: ProductData, index: number) =>
-                <li key={index}>
-                  <Product productIndex={index} data={prod} deleteProductHandler={this.props.deleteProductHandler} />
-                </li>
-              )}
-            </ol>
-          </div>
+        <div className="cardPaper"
+          onMouseEnter={this.onMouseOver.bind(this)}
+          onMouseLeave={this.onMouseOut.bind(this)}
+        >
+          <div>Id: {this.props.data.id}</div>
+          <div>Customer name: {this.props.data.customer_name}</div>
+          <div>Status:  <b>{this.props.data.status}</b></div>
+
+          {this.productList()}
         </div>
       </Paper>
-    )
+    );
   }
 }

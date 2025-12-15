@@ -1,17 +1,14 @@
-
-export type ProductData = {
+export type AbstractProductData = {
   id?: number;
   name?: string;
-  flavor?: {
-    id?: number;
-    name?: string;
-  };
-  cone?: {
-    id?: number;
-    name?: string;
-  };
-  toppings?: {
-    id?: number;
-    name?: string;
-  }[]
+}
+
+export type FlavorData = AbstractProductData;
+export type ConeData = AbstractProductData;
+export type ToppingData = AbstractProductData;
+
+export type ProductData = AbstractProductData & {
+  flavor?: FlavorData;
+  cone?: ConeData;
+  toppings?: ToppingData[]
 }

@@ -1,8 +1,8 @@
 FROM alpine:latest AS base
 RUN apk add --no-cache nodejs && apk add --no-cache npm && rm -rf /var/cache/apk/*
-COPY dist/ dist/
+COPY ./ ./
 COPY package*.json .
-RUN npm ci --omit=dev
+RUN npm ci
+RUN npm run build
 RUN npm cache clean --force
-COPY dist/ dist/
-ENTRYPOINT ["npx","serve", "/dist"]
+ENTRYPOINT ["npx", "serve", "/dist"]

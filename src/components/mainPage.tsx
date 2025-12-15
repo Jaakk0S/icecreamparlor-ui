@@ -4,7 +4,7 @@ import { OrdersStatus } from "./ordersStatus";
 import '../styles/App.css'
 import { OrderBuilder } from "./orderBuilder";
 import type { ProductData } from "../types/ProductData";
-import { Order } from "./orderUnderConstruction";
+import { OrderUnderConstruction } from "./orderUnderConstruction";
 import type { OrderData } from "../types/OrderData";
 import { Button } from "@mui/material";
 
@@ -29,15 +29,26 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
     }
   }
 
+
   newOrderStarted = (): void => {
     this.setState({ currentOrder: { products: [] } })
   }
 
-  classicProductAdded = (name: string): void => {
-
-    // Fetch classic product data
-
-    this.addProduct({ name: name });
+  classicProductAdded = (classicId: number): void => {
+    let url: string = `http://${import.meta.env.VITE_MENU_API_HOST}:${import.meta.env.VITE_MENU_API_PORT}/menu/v1/product/` + classicId;
+    console.log('GET ' + url);
+    (async () => {
+      const rawResponse = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors'
+      });
+      const response = await rawResponse.json();
+      this.addProduct(response);
+    })();
   }
 
   customProductAdded = (data: ProductData): void => {
@@ -65,20 +76,37 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
     }), () => this.validateOrder())
   }
 
-  validateName = (valid: boolean): void => {
+  nameUpdated = (name: string, valid: boolean): void => {
+    let newOrder = Object.assign({}, this.state.currentOrder);
+    newOrder.customer_name = name;
     this.setState({
+      currentOrder: newOrder,
       nameValidated: valid
     }, () => this.validateOrder())
   }
 
   validateOrder = (): void => {
     this.setState({
-      orderValidated: this.state.nrProducts > 0 && this.state.nameValidated
+      orderValidated: this.state.nrProducts > 0 && this.state.nameValidated && this.state.currentOrder!.products.length > 0
     })
   }
 
   placeOrderClicked = (): void => {
-
+    let url: string = `http://${import.meta.env.VITE_ORDER_API_HOST}:${import.meta.env.VITE_ORDER_API_PORT}/order/v1/place`;
+    console.log('POST ' + url);
+    (async () => {
+      const rawResponse = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.currentOrder),
+        mode: 'cors'
+      });
+      const response = await rawResponse.json();
+      console.log("Order placed. Response: " + JSON.stringify(response));
+    })();
   }
 
 
@@ -103,7 +131,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
             />
             <div className="column">
               <h1 className={this.state.currentOrder == undefined ? "greyedHeading" : ""}>Current Order</h1>
-              <Order data={this.state.currentOrder} deleteProductHandler={this.deleteProductClicked} validateNameHandler={this.validateName} />
+              <OrderUnderConstruction data={this.state.currentOrder} deleteProductHandler={this.deleteProductClicked} nameUpdatedHandler={this.nameUpdated} />
               <div className="centeredButton">
                 <Button variant="contained"
                   disabled={!this.state.orderValidated}

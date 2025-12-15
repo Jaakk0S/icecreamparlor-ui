@@ -2,31 +2,33 @@ import { Component } from "react";
 import type { OrderData } from "../types/OrderData";
 import { InputAdornment, Paper, TextField } from "@mui/material";
 import '../styles/Order.css';
-import { Product } from "./product";
+import { ProductUnderConstructionCard } from "./productUnderConstructionCard";
 import type { ProductData } from "../types/ProductData";
 
-export type OrderProps = {
+export type OrderUnderConstructionProps = {
   data?: OrderData,
   deleteProductHandler: (index: number) => undefined,
-  validateNameHandler: (valid: boolean) => void
+  nameUpdatedHandler: (name: string, valid: boolean) => void
 }
 
-export type OrderState = {
-  name: string
+export type OrderUnderConstructionState = {
+  name: string,
+  nameMsg: string,
+  nameError: boolean
 }
 
-export class Order extends Component<OrderProps, OrderState> {
+export class OrderUnderConstruction extends Component<OrderUnderConstructionProps, OrderUnderConstructionState> {
 
-  constructor(props: OrderProps) {
+  constructor(props: OrderUnderConstructionProps) {
     super(props);
     this.state = {
-      name: "Enter your name"
+      name: "Enter your name",
+      nameMsg: "Name required",
+      nameError: true
     }
   }
 
   nameUnchanged: boolean = true;
-  nameMsg: string = "Name required";
-  nameError: boolean = true;
 
   nameSelected = (e: React.FocusEvent<HTMLInputElement>) => {
     if (this.nameUnchanged)
@@ -35,17 +37,16 @@ export class Order extends Component<OrderProps, OrderState> {
 
   nameUpdated = (e: React.ChangeEvent<HTMLInputElement>) => {
     const n: string = e.currentTarget.value;
-    this.setState({ name: n })
-    this.nameError = n.length < 3;
-    if (n.length < 3)
-      this.nameMsg = "Name too short!"
+    let err: boolean = n.length < 3;
     this.nameUnchanged = false;
-    this.validate();
-  }
-
-  validate = () => {
-    let valid: boolean = !this.nameUnchanged && !this.nameError && this.props.data!.products.length > 0;
-    this.props.validateNameHandler(valid);
+    this.setState({
+      name: n,
+      nameError: err,
+      nameMsg: n.length < 3 ? "Name too short!" : ""
+    }, () => {
+      let valid: boolean = !this.nameUnchanged && !this.state.nameError;
+      this.props.nameUpdatedHandler(n, valid);
+    })
   }
 
   render() {
@@ -56,18 +57,18 @@ export class Order extends Component<OrderProps, OrderState> {
     return (
       <Paper elevation={15}>
         <div className="cardPaper">
-          <TextField required id="outlined-required"
+          <TextField required
             fullWidth
             variant="standard"
             label="Required"
             value={this.state.name}
             onChange={this.nameUpdated}
             onFocus={this.nameSelected}
-            helperText={this.nameError ? this.nameMsg : ""}
-            error={this.nameError}
+            helperText={this.state.nameError ? this.state.nameMsg : ""}
+            error={this.state.nameError}
             slotProps={{
               input: {
-                endAdornment: <InputAdornment position="start">Customer name: </InputAdornment>,
+                endAdornment: <InputAdornment position="start">Customer name</InputAdornment>,
               },
             }}
           />
@@ -76,7 +77,7 @@ export class Order extends Component<OrderProps, OrderState> {
             <ol>
               {this.props.data.products.map((prod: ProductData, index: number) =>
                 <li key={index}>
-                  <Product productIndex={index} data={prod} deleteProductHandler={this.props.deleteProductHandler} />
+                  <ProductUnderConstructionCard productIndex={index} data={prod} deleteProductHandler={this.props.deleteProductHandler} />
                 </li>
               )}
             </ol>

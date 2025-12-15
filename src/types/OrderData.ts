@@ -12,7 +12,7 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 export type OrderData = {
   id?: number;
   status?: OrderStatus,
-  customerName?: string,
+  customer_name?: string,
   products: ProductData[]
 }
 
