@@ -1,6 +1,7 @@
 import { Component } from "react";
 import type { OrderData } from "../types/OrderData";
 import { PlacedOrder } from "./placedOrder";
+import { ORDERAPI_ENDPOINT } from "../main";
 
 type OrdersStatusState = {
   orders: OrderData[];
@@ -21,7 +22,7 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
 
   async componentDidMount(): Promise<void> {
     const response: Response = await fetch(
-      `http://${import.meta.env.VITE_ORDER_API_HOST}:${import.meta.env.VITE_ORDER_API_PORT}/order/v1/stream`, {
+      ORDERAPI_ENDPOINT + "stream", {
       mode: 'cors'
     }
     );

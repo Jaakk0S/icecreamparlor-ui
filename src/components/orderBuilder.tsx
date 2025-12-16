@@ -7,6 +7,7 @@ import '../styles/App.css'
 import type { AbstractProductData, ProductData } from "../types/ProductData";
 import { Button } from "@mui/material";
 import type { TypeSelection } from '../types/TypeSelection';
+import { MENUAPI_ENDPOINT } from "../main";
 
 
 export type OBProps = {
@@ -19,7 +20,7 @@ export type OBProps = {
 export const SELECTION_BASE: TypeSelection[] = [{ value: 0, label: 'Make your selection', isDisabled: true }];
 
 export async function fetchTypeSelection(endpoint: string): Promise<TypeSelection[]> {
-  let url: string = `http://${import.meta.env.VITE_MENU_API_HOST}:${import.meta.env.VITE_MENU_API_PORT}/menu/v1/` + endpoint;
+  let url: string = MENUAPI_ENDPOINT + endpoint;
   console.log('GET ' + url);
   return fetch(url, {
     method: 'GET',

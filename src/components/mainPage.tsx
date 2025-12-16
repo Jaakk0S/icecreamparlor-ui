@@ -7,6 +7,7 @@ import type { ProductData } from "../types/ProductData";
 import { OrderUnderConstruction } from "./orderUnderConstruction";
 import type { OrderData } from "../types/OrderData";
 import { Button } from "@mui/material";
+import { MENUAPI_ENDPOINT, ORDERAPI_ENDPOINT } from "../main";
 
 type MainPageProps = {}
 
@@ -35,7 +36,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
   }
 
   classicProductAdded = (classicId: number): void => {
-    let url: string = `http://${import.meta.env.VITE_MENU_API_HOST}:${import.meta.env.VITE_MENU_API_PORT}/menu/v1/product/` + classicId;
+    let url: string = MENUAPI_ENDPOINT + "product/" + classicId;
     console.log('GET ' + url);
     (async () => {
       const rawResponse = await fetch(url, {
@@ -92,7 +93,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
   }
 
   placeOrderClicked = (): void => {
-    let url: string = `http://${import.meta.env.VITE_ORDER_API_HOST}:${import.meta.env.VITE_ORDER_API_PORT}/order/v1/place`;
+    let url: string = ORDERAPI_ENDPOINT + "/order/v1/place";
     console.log('POST ' + url);
     (async () => {
       const rawResponse = await fetch(url, {
