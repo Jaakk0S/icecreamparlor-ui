@@ -93,7 +93,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
   }
 
   placeOrderClicked = (): void => {
-    let url: string = ORDERAPI_ENDPOINT + "/order/v1/place";
+    let url: string = ORDERAPI_ENDPOINT + "place";
     console.log('POST ' + url);
     (async () => {
       const rawResponse = await fetch(url, {
