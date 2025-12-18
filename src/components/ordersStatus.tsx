@@ -20,13 +20,23 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
     }
   }
 
-  async componentDidMount(): Promise<void> {
-    const response: Response = await fetch(
-      ORDERAPI_ENDPOINT + "stream", {
-      mode: 'cors'
+  private readOrderStatus: boolean = true;
+
+  private orderStatusLoop = () => {
+    while (this.readOrderStatus) {
+      fetch(ORDERAPI_ENDPOINT + "stream", { mode: 'cors' }).then(async res => {
+        this.setState({
+          orders: JSON.parse(await res.text()) as OrderData[]
+        });
+      }).catch(err => {
+        console.log("Order status poll error: " + err);
+      });
     }
-    );
-    const reader = response.body!.getReader();
+  }
+
+  async componentDidMount(): Promise<void> {
+    this.orderStatusLoop();
+    /*const reader = response.body!.getReader();
     try {
       while (true) {
         const { done, value } = await reader.read();
@@ -46,7 +56,7 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
       console.error('Streaming error:', error);
     } finally {
       reader.releaseLock();
-    }
+    }*/
   }
 
   render() {
