@@ -21,10 +21,11 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
   }
 
   private readOrderStatus: boolean = true;
+  private readOrderSafety = 500;
 
-  private orderStatusLoop = () => {
+  private orderStatusLoop = async () => {
     while (this.readOrderStatus) {
-      fetch(ORDERAPI_ENDPOINT + "stream", { mode: 'cors' }).then(async res => {
+      await fetch(ORDERAPI_ENDPOINT + "stream", { mode: 'cors' }).then(async res => {
         this.setState({
           orders: JSON.parse(await res.text()) as OrderData[]
         });
@@ -32,6 +33,8 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
         console.log("Order status poll error: " + err);
       });
     }
+    if (--this.readOrderSafety <= 0)
+      this.readOrderStatus = false;
   }
 
   async componentDidMount(): Promise<void> {
