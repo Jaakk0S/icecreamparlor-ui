@@ -15,6 +15,31 @@
     color: #CC0000;
 }
 
+.pendingImage {
+    width: 40px;
+    float: right;
+    align-self: middle;
+}
+
+.deliveryImage {
+    width: 50px;
+    position: relative;
+    float: left;
+    top: 50%;
+}
+
+.completedImage {
+    width: 50px;
+    float: right;
+    align-self: middle;
+}
+
+.orderStatusColumn {
+  float: left;
+  width: 47%;
+  padding: 1%;
+}
+
 .productList {
 
 }

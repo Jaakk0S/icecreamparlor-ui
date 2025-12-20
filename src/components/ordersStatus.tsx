@@ -63,12 +63,19 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
   }
 
   render() {
+    let test: OrderData = {
+      id: 13,
+      status: "delivered",
+      customer_name: "Pena",
+      products: []
+    };
     return (
       <div className="column">
         <h1>Orders Status</h1>
         {this.state.orders.map((o: OrderData) =>
           <PlacedOrder data={o} />
         )}
+        <PlacedOrder data={test} />
       </div>
     )
   }
