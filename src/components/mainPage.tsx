@@ -145,7 +145,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
           </div>
           <div className="footer">
             This is a free demo app.<br />
-            To browse and test the internal OpenAPI specification, <a href={location.hostname + "/swagger/"}>click here</a>.
+            To browse and test the internal OpenAPI specification, <a href={"/swagger/"}>click here</a>.
           </div>
         </div>
       </main >
