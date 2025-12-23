@@ -6,7 +6,7 @@ import { OrderBuilder } from "./orderBuilder";
 import type { ProductData } from "../types/ProductData";
 import { OrderUnderConstruction } from "./orderUnderConstruction";
 import type { OrderData } from "../types/OrderData";
-import { Button } from "@mui/material";
+import { Button, Link } from "@mui/material";
 import { MENUAPI_ENDPOINT, ORDERAPI_ENDPOINT } from "../main";
 
 type MainPageProps = {}
@@ -117,7 +117,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
         <div>
           <header>
             <div className="">
-              Ice-Cream Parlor Demo App
+              Ice-Cream Parlor
             </div>
             <div className="subnote">
               Jaakko Saaristo 2025
@@ -144,7 +144,8 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
             <OrdersStatus />
           </div>
           <div className="footer">
-            Some footer stuff here
+            This is a free demo app.<br />
+            To browse and test the internal OpenAPI specification, <a href={location.hostname + ":" + location.port + "/swagger/"}>click here</a>.
           </div>
         </div>
       </main >
