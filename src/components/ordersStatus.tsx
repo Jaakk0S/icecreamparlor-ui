@@ -29,8 +29,8 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
         });
       }).catch((err: unknown) => {
         console.log("Order status poll error: " + err);
-        if (err instanceof TypeError && err.message.indexOf("CORS") != -1) {
-          this.readOrderStatus = false; // CORS error? -> Stop polling
+        if (err instanceof TypeError) {
+          this.readOrderStatus = false; // TypeError is likely CORS error? -> Stop polling
         }
       });
     }
