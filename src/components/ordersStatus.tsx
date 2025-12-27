@@ -7,9 +7,7 @@ type OrdersStatusState = {
   orders: OrderData[];
 }
 
-type OrdersStatusProps = {
-  //dataUpdatedOnServerHandler: (name: number) => void
-};
+type OrdersStatusProps = {};
 
 export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState> {
 
@@ -29,8 +27,11 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
         this.setState({
           orders: JSON.parse(await res.text()) as OrderData[]
         });
-      }).catch(err => {
+      }).catch((err: unknown) => {
         console.log("Order status poll error: " + err);
+        if (err instanceof TypeError && err.message.indexOf("CORS") != -1) {
+          this.readOrderStatus = false; // CORS error? -> Stop polling
+        }
       });
     }
     if (--this.readOrderSafety <= 0)
@@ -39,27 +40,6 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
 
   async componentDidMount(): Promise<void> {
     this.orderStatusLoop();
-    /*const reader = response.body!.getReader();
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) {
-          console.log('Streaming complete!');
-          break;
-        }
-
-        const chunk = new TextDecoder().decode(value);
-        console.log('Received chunk:', chunk);
-
-        this.setState({
-          orders: JSON.parse(chunk) as OrderData[]
-        });
-      }
-    } catch (error) {
-      console.error('Streaming error:', error);
-    } finally {
-      reader.releaseLock();
-    }*/
   }
 
   render() {
