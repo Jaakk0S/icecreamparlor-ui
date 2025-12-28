@@ -23,7 +23,7 @@ export class OrdersStatus extends Component<OrdersStatusProps, OrdersStatusState
 
   private orderStatusLoop = async () => {
     while (this.readOrderStatus) {
-      await fetch(ORDERAPI_ENDPOINT + "stream", { signal: AbortSignal.timeout(1000000) }).then(async res => {
+      await fetch(ORDERAPI_ENDPOINT + "stream", { mode: 'no-cors', signal: AbortSignal.timeout(1000000) }).then(async res => {
         this.setState({
           orders: JSON.parse(await res.text()) as OrderData[]
         });
