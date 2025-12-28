@@ -9,8 +9,8 @@ let menuPort: string = import.meta.env.DEV ? import.meta.env.VITE_MENU_API_TEST_
 let orderHost: string = import.meta.env.DEV ? import.meta.env.VITE_ORDER_API_TEST_HOST : location.hostname;
 let orderPort: string = import.meta.env.DEV ? import.meta.env.VITE_ORDER_API_TEST_PORT : location.port;
 
-export const MENUAPI_ENDPOINT: string = `http://${menuHost}:${menuPort}/menu/v1/`;
-export const ORDERAPI_ENDPOINT: string = `http://${orderHost}:${orderPort}/order/v1/`;
+export const MENUAPI_ENDPOINT: string = `https://${menuHost}:${menuPort}/menu/v1/`;
+export const ORDERAPI_ENDPOINT: string = `https://${orderHost}:${orderPort}/order/v1/`;
 
 const container = document.getElementById('root') as HTMLElement;
 ReactDOM.createRoot(container).render(
