@@ -28,7 +28,7 @@ export async function fetchTypeSelection(endpoint: string): Promise<TypeSelectio
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    mode: 'no-cors'
+    mode: 'cors'
   }).then(async (resp) => {
     const data: AbstractProductData[] = await resp.json() as AbstractProductData[];
     let newItems: TypeSelection[] = SELECTION_BASE.concat(data.map(p => {

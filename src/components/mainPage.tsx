@@ -45,7 +45,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
-        mode: 'no-cors'
+        mode: 'cors'
       });
       const response = await rawResponse.json();
       this.addProduct(response);
@@ -103,7 +103,7 @@ export class MainPage extends Component<MainPageProps, MainPageState> {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(this.state.currentOrder),
-        mode: 'no-cors'
+        mode: 'cors'
       });
       const response = await rawResponse.json();
       console.log("Order placed. Response: " + JSON.stringify(response));
